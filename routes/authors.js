@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Author = require('../models/author.js')
+const { route } = require('./index.js')
 
 
 //get all authors
@@ -72,6 +73,89 @@ router.post('/', async (req,res)=>{
 
    
 })
+
+router.get('/:id',(req,res)=>{
+
+    res.send(req.params.id)
+
+
+})
+
+router.get('/:id/edit',async (req,res)=>{
+    
+    
+    try{
+        const author = await Author.findById(req.params.id)
+
+        res.render('authors/edit.ejs',{author:author})
+    }
+
+    catch{
+        res.redirect('author')
+    }
+    
+})
+
+router.put('/:id', async (req,res)=>{
+    let author; // should be avaliable inside catch block
+
+    try{
+
+        author = await Author.findById(req.params.id)
+        author.name = req.body.name
+        await author.save()
+        res.redirect(`/author/${author.id}`)
+    }
+
+    catch{
+
+        if(author== null){
+
+            res.redirect('/')
+        }
+
+        else{
+
+            res.render('author/edit',{
+
+                author:author,
+                errorMessage: "Error in updating author"
+            })
+        }
+    }
+
+    
+})
+
+router.delete('/:id', async (req,res)=>{
+    let author; // should be avaliable inside catch block
+
+    try{
+
+        author = await Author.findById(req.params.id)
+        
+        await author.remove()
+        res.redirect('/author')
+    }
+
+    catch{
+
+        if(author== null){
+
+            res.redirect('/')
+        }
+
+        else{
+
+            res.render(`author/${author.id}`)
+        }
+    }
+
+    
+})
+
+
+
 
 
 module.exports = router

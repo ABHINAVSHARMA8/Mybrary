@@ -8,6 +8,11 @@
 <%authors.forEach(author => { %>
 
     <div><%=author.name%></div>
+    <a href =  "/author/<%=author.id%>"> View</a>
+    <a href =  "/author/<%=author.id%>/edit"> Edit</a>
+    <form  method ="POST" action ="/author/<%=author.id%>?_method=DELETE">
+        <button type="submit">Delete</button>
+    </form>
 
 
 <%})%>
